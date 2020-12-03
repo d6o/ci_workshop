@@ -1,0 +1,16 @@
+---
+jobs:
+  - name: job
+    public: true
+    plan:
+      - task: first-task
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: alpine
+          run:
+            path: echo
+            args: ["Hello, World!"]
+

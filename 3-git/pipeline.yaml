@@ -1,0 +1,28 @@
+---
+resources:
+  - name: source-code
+    type: git
+    icon: github
+    source:
+      uri: https://github.com/disiqueira/ci_workshop
+
+jobs:
+  - name: job
+    public: true
+    plan:
+      - get: source-code
+        trigger: true
+
+      - task: list-files
+        config:
+          inputs:
+            - name: source-code
+          platform: linux
+          image_resource:
+            type: registry-image
+            source: { repository: busybox }
+          run:
+            path: ls
+            args: ["-la", "source-code"]
+
+

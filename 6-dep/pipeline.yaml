@@ -1,0 +1,52 @@
+---
+resources:
+  - name: source-code
+    type: git
+    icon: github
+    source:
+      uri: https://github.com/disiqueira/ci_workshop
+
+jobs:
+  - name: print-files
+    public: true
+    plan:
+      - get: source-code
+        trigger: true
+
+      - task: list-files
+        config:
+          inputs:
+            - name: source-code
+          platform: linux
+          image_resource:
+            type: registry-image
+            source: { repository: busybox }
+          run:
+            path: ls
+            args: ["-la", "source-code"]
+
+  - name: check-lint
+    public: true
+    plan:
+      - get: source-code
+        trigger: true
+        passed:
+        - print-files
+
+      - task: list-files
+        config:
+          inputs:
+            - name: source-code
+          platform: linux
+          image_resource:
+            type: registry-image
+            source: { repository: golang }
+          run:
+            path: /bin/sh
+            args:
+              - -xce
+              - |
+                cd source-code
+                go get -u golang.org/x/lint/golint
+                golint
+
