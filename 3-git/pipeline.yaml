@@ -23,6 +23,6 @@ jobs:
             source: { repository: busybox }
           run:
             path: ls
-            args: ["-la", "source-code"]
+            args: ["source-code"]
 
 
